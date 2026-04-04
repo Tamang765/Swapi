@@ -1,0 +1,21 @@
+html {
+    box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #ffffff;
+    color: #111111;
+}
+
+main {
+    min-height: calc(100vh - 8rem);
+    padding: 2rem 0;
+}
