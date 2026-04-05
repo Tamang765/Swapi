@@ -1,27 +1,120 @@
 .button,
 .linkButton {
-  align-items: center;
-  background: #111111;
-  border: 1px solid #111111;
-  color: #ffffff;
-  display: inline-flex;
-  justify-content: center;
-  min-height: 2.75rem;
-  padding: 0.75rem 1rem;
-  text-decoration: none;
+    align-items: center;
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    color: var(--on-accent);
+    display: inline-flex;
+    gap: 0.55rem;
+    justify-content: center;
+    min-height: 2.75rem;
+    padding: 0.75rem 1rem;
+    position: relative;
+    text-decoration: none;
+    transition:
+        transform 180ms ease,
+        box-shadow 180ms ease,
+        opacity 180ms ease;
+}
+
+.button:hover,
+.linkButton:hover {
+    box-shadow: 0 10px 24px color-mix(in srgb, var(--accent) 18%, transparent);
+    transform: translateY(-1px);
+}
+
+.button:active,
+.linkButton:active,
+.linkButtonLoading {
+    transform: translateY(0);
+}
+
+.linkButtonLoading {
+    opacity: 0.88;
+    pointer-events: none;
+}
+
+.linkButtonSpinner {
+    border: 2px solid color-mix(in srgb, var(--on-accent) 30%, transparent);
+    border-radius: 999px;
+    border-top-color: var(--on-accent);
+    display: inline-block;
+    height: 0.9rem;
+    opacity: 0;
+    transform: scale(0.8);
+    transition:
+        opacity 160ms ease,
+        transform 160ms ease;
+    width: 0.9rem;
+}
+
+.linkButtonSpinnerVisible {
+    animation: button-spin 700ms linear infinite;
+    opacity: 1;
+    transform: scale(1);
+}
+
+.disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
 }
 
 .input,
 .select {
-  background: #ffffff;
-  border: 1px solid #d0d0d0;
-  color: #111111;
-  min-height: 3rem;
-  padding: 0.75rem 0.9rem;
-  width: 100%;
+    appearance: none;
+    background: var(--surface-container-low);
+    border: 1px solid var(--border);
+    color: var(--text);
+    min-height: 3rem;
+    padding: 0.8rem 0.9rem;
+    width: 100%;
+}
+
+.card {
+    background: linear-gradient(
+        180deg,
+        var(--surface-container-low) 0%,
+        var(--surface-container-high) 100%
+    );
+    border: 1px solid var(--border);
+    padding: 1.2rem;
 }
 
 .skeleton {
-  background: #ececec;
-  min-height: 1rem;
+    animation: pulse 1.4s ease-in-out infinite;
+    background: linear-gradient(
+        90deg,
+        var(--surface-container-low),
+        var(--surface-container-highest),
+        var(--surface-container-low)
+    );
+    background-size: 200% 100%;
+    min-height: 1rem;
+}
+
+.table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table th,
+.table td {
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem;
+    text-align: left;
+}
+
+@keyframes pulse {
+    0% {
+        background-position: 100% 0;
+    }
+    100% {
+        background-position: -100% 0;
+    }
+}
+
+@keyframes button-spin {
+    to {
+        transform: rotate(360deg);
+    }
 }

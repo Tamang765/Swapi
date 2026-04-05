@@ -1,17 +1,18 @@
-import { DetailHeader } from "@/components/detail/detail-header";
-import { DetailSpecs } from "@/components/detail/detail-specs";
-import { RelatedItems } from "@/components/detail/related-items";
-import { getDetailPageData } from "@/modules/detail/api";
-import styles from "@/components/detail/detail.module.css";
+import { notFound } from "next/navigation";
+import { renderDetailView } from "@/components/detail/views";
+import { getDetailResource } from "@/modules/detail/api";
+import { isCategory } from "@/lib/validators";
 
-export default async function DetailPage() {
-  const data = await getDetailPageData();
+export default async function DetailPage(props: {
+  params: Promise<{ category: string; slug: string }>;
+}) {
+  const { category, slug } = await props.params;
 
-  return (
-    <section className={styles.shell}>
-      <DetailHeader title={data.title} />
-      <DetailSpecs resource={data.resource} />
-      <RelatedItems />
-    </section>
-  );
+  if (!isCategory(category)) {
+    notFound();
+  }
+
+  const resource = await getDetailResource(category, slug);
+
+  return renderDetailView(category, resource);
 }

@@ -1,14 +1,6 @@
-import type { ReactNode, SelectHTMLAttributes } from "react";
+import type { ComponentPropsWithoutRef } from "react";
 import styles from "@/components/ui/ui.module.css";
 
-export function Dropdown(
-  props: SelectHTMLAttributes<HTMLSelectElement> & { children: ReactNode },
-) {
-  const { className = "", children, ...rest } = props;
-
-  return (
-    <select className={`${styles.select} ${className}`} {...rest}>
-      {children}
-    </select>
-  );
+export function Dropdown(props: ComponentPropsWithoutRef<"select">) {
+  return <select {...props} className={`${styles.select} ${props.className ?? ""}`} />;
 }
