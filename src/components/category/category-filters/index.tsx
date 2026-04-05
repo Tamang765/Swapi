@@ -20,31 +20,24 @@ function SearchField(props: {
   category: Category;
   categoryState: Record<Category, CategoryState>;
   currentState: CategoryState;
+  isPending: boolean;
   onNavigate: (
     category: Category,
     state: Record<Category, CategoryState>,
   ) => void;
 }) {
-  const { category, categoryState, currentState, onNavigate } = props;
+  const { category, categoryState, currentState, isPending, onNavigate } = props;
   const [value, setValue] = useState(currentState.search);
-  const [isSearchPending, setIsSearchPending] = useState(false);
   const debouncedValue = useCategorySearchInput(value);
   const isDebouncing = value !== debouncedValue;
-  const isSearching = !isDebouncing && isSearchPending;
-
-  useEffect(() => {
-    // Search has its own loading state so sort/page changes do not make the
-    // input look busy when the user did not touch search.
-    setValue(currentState.search);
-    setIsSearchPending(false);
-  }, [currentState.search]);
+  const isSearching =
+    isPending && !isDebouncing && debouncedValue !== currentState.search;
 
   useEffect(() => {
     if (debouncedValue === currentState.search) {
       return;
     }
 
-    setIsSearchPending(true);
     onNavigate(category, {
       ...categoryState,
       [category]: {
@@ -87,6 +80,68 @@ function SearchField(props: {
   );
 }
 
+function SortField(props: {
+  activeCategory: Category;
+  categoryState: Record<Category, CategoryState>;
+  currentState: CategoryState;
+  isPending: boolean;
+  onNavigate: (
+    category: Category,
+    state: Record<Category, CategoryState>,
+  ) => void;
+}) {
+  const { activeCategory, categoryState, currentState, isPending, onNavigate } =
+    props;
+  const [sortValue, setSortValue] = useState(currentState.sort);
+  const isSortPending = isPending && sortValue !== currentState.sort;
+
+  return (
+    <div className={styles.field}>
+      <label className={styles.label} htmlFor="sort">
+        Sort by {CATEGORY_CONFIG[activeCategory].sortField}
+      </label>
+      <div className={styles.sortInputWrap}>
+        <span
+          className={`${styles.sortIndicator} ${
+            isSortPending ? styles.sortIndicatorActive : ""
+          }`}
+          aria-hidden="true"
+        />
+        <Dropdown
+          id="sort"
+          value={currentState.sort}
+          aria-busy={isSortPending}
+          className={styles.sortInput}
+          disabled={isPending}
+          onChange={(event) => {
+            const nextSort = event.target.value as "asc" | "desc";
+            setSortValue(nextSort);
+            onNavigate(activeCategory, {
+              ...categoryState,
+              [activeCategory]: {
+                ...currentState,
+                sort: nextSort,
+                page: 1,
+              },
+            });
+          }}
+        >
+          <option value="asc">
+            {CATEGORY_CONFIG[activeCategory].sortField === "title"
+              ? "Title A to Z"
+              : "Name A to Z"}
+          </option>
+          <option value="desc">
+            {CATEGORY_CONFIG[activeCategory].sortField === "title"
+              ? "Title Z to A"
+              : "Name Z to A"}
+          </option>
+        </Dropdown>
+      </div>
+    </div>
+  );
+}
+
 export function CategoryFilters(props: {
   activeCategory: Category;
   categoryState: Record<Category, CategoryState>;
@@ -95,12 +150,6 @@ export function CategoryFilters(props: {
   const { activeCategory, categoryState, showCategoryList = false } = props;
   const currentState = categoryState[activeCategory];
   const queryParams = useQueryParams();
-  const [isSortPending, setIsSortPending] = useState(false);
-
-  useEffect(() => {
-    // Reset the sort spinner once the selected value comes back from the URL.
-    setIsSortPending(false);
-  }, [currentState.sort]);
 
   const navigate = useCallback(
     (nextCategory: Category, nextState: Record<Category, CategoryState>) => {
@@ -148,58 +197,25 @@ export function CategoryFilters(props: {
           category={activeCategory}
           categoryState={categoryState}
           currentState={currentState}
+          isPending={queryParams.isPending}
           onNavigate={navigate}
         />
 
-        <div className={styles.field}>
-          <label className={styles.label} htmlFor="sort">
-            Sort by {CATEGORY_CONFIG[activeCategory].sortField}
-          </label>
-          <div className={styles.sortInputWrap}>
-            <span
-              className={`${styles.sortIndicator} ${
-                isSortPending ? styles.sortIndicatorActive : ""
-              }`}
-              aria-hidden="true"
-            />
-            <Dropdown
-              id="sort"
-              value={currentState.sort}
-              aria-busy={isSortPending}
-              className={styles.sortInput}
-              disabled={queryParams.isPending}
-              onChange={(event) => {
-                setIsSortPending(true);
-                navigate(activeCategory, {
-                  ...categoryState,
-                  [activeCategory]: {
-                    ...currentState,
-                    sort: event.target.value as "asc" | "desc",
-                    page: 1,
-                  },
-                });
-              }}
-            >
-              <option value="asc">
-                {CATEGORY_CONFIG[activeCategory].sortField === "title"
-                  ? "Title A to Z"
-                  : "Name A to Z"}
-              </option>
-              <option value="desc">
-                {CATEGORY_CONFIG[activeCategory].sortField === "title"
-                  ? "Title Z to A"
-                  : "Name Z to A"}
-              </option>
-            </Dropdown>
-          </div>
-        </div>
+        <SortField
+          key={`${activeCategory}:${currentState.sort}`}
+          activeCategory={activeCategory}
+          categoryState={categoryState}
+          currentState={currentState}
+          isPending={queryParams.isPending}
+          onNavigate={navigate}
+        />
 
         <div className={styles.filterActions}>
           <Button
             type="button"
             className={styles.resetButton}
             disabled={!canReset || queryParams.isPending}
-            onClick={() =>
+            onClick={() => {
               navigate(activeCategory, {
                 ...categoryState,
                 [activeCategory]: {
@@ -208,10 +224,10 @@ export function CategoryFilters(props: {
                   sort: categoryStateDefaults.sort,
                   page: categoryStateDefaults.page,
                 },
-              })
-            }
+              });
+            }}
           >
-            Reset all
+            {queryParams.isPending ? "Resetting..." : "Reset all"}
           </Button>
         </div>
       </div>

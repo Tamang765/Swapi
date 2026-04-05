@@ -66,12 +66,6 @@ export function CategoryCard(props: {
   const config = CATEGORY_CONFIG[category];
   const primaryValue = getPrimaryValue(resource, category);
   const slug = getResourceSlug(resource.url);
-  const subtitleValue =
-    category === "films"
-      ? `Episode ${formatResourceValue(resource.episode_id)}`
-      : config.sortField === "name"
-        ? config.label.slice(0, -1)
-        : formatResourceValue(resource[config.sortField]);
   const supplementaryStat =
     getSupplementaryStats(category, resource)[0] ?? null;
   const primaryMeta = getPrimaryMeta(category, resource);

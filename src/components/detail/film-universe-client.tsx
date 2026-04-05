@@ -25,12 +25,6 @@ export function FilmUniverseClient(props: {
     props.sections[0];
 
   useEffect(() => {
-    if (!activeSection && props.sections[0]) {
-      setActiveSectionId(props.sections[0].id);
-    }
-  }, [activeSection, props.sections]);
-
-  useEffect(() => {
     if (!modalSection) {
       return;
     }

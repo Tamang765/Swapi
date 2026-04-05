@@ -27,6 +27,7 @@ export function DetailHeader(props: {
           <span className={styles.headerCurrent}>Details</span>
         </div>
         <LinkButton
+          key={props.categoryPath}
           href={ROUTES.category(props.categoryPath)}
           className={styles.headerTag}
         >

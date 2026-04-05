@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 import { CATEGORY_CONFIG } from "@/constants/categories";
 import { ROUTES } from "@/constants/routes";
 import { RECENT_CATEGORY_COOKIE } from "@/lib/config";
@@ -33,12 +32,9 @@ function readCookie(name: string) {
 
 export function RecentCategory(props: RecentCategoryProps) {
   const pathname = usePathname();
-  const [recentCategory, setRecentCategory] = useState("");
-
-  useEffect(() => {
-    // Re-read the cookie after navigation so the landing page stays in sync.
-    setRecentCategory(readCookie(RECENT_CATEGORY_COOKIE));
-  }, [pathname]);
+  void pathname;
+  const recentCategory =
+    typeof document === "undefined" ? "" : readCookie(RECENT_CATEGORY_COOKIE);
 
   return (
     <div className={props.className}>
