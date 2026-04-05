@@ -19,3 +19,11 @@ main {
     min-height: calc(100vh - 8rem);
     padding: 2rem 0;
 }
+
+.route-progress {
+    background: #111111;
+    height: 3px;
+    inset: 0 0 auto;
+    position: fixed;
+    z-index: 9999;
+}

@@ -1,3 +1,3 @@
 export function LandingLoading() {
-  return <p>Loading landing page...</p>;
+  return <p>Loading page...</p>;
 }

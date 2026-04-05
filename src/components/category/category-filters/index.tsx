@@ -31,6 +31,7 @@ export function CategoryFilters() {
       </Dropdown>
       <Button
         type="button"
+        disabled={queryParams.isPending}
         onClick={() =>
           queryParams.replace(
             createCategorySearchParams({
@@ -40,7 +41,7 @@ export function CategoryFilters() {
           )
         }
       >
-        Apply
+        {queryParams.isPending ? "Loading..." : "Apply"}
       </Button>
     </div>
   );
