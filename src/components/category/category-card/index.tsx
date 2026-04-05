@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
-import { LinkButton } from "@/components/ui/button";
 import styles from "@/components/category/category.module.css";
 import { CATEGORY_CONFIG, type Category } from "@/constants/categories";
 import type { ResourceRecord } from "@/types/api.types";
@@ -71,18 +70,20 @@ export function CategoryCard(props: {
   const primaryMeta = getPrimaryMeta(category, resource);
 
   return (
-    <Card
-      className={category === "films" ? styles.filmCard : styles.resourceCard}
+    <Link
+      href={ROUTES.detail(category, slug)}
+      className={styles.cardLink}
     >
+      <Card
+        className={category === "films" ? styles.filmCard : styles.resourceCard}
+      >
       <div
         className={`${styles.cardVisual} ${styles[`visual${category[0].toUpperCase()}${category.slice(1)}`] ?? ""}`}
         aria-hidden="true"
       />
       <header className={styles.cardHeader}>
         <span className={styles.cardEyebrow}>{config.label}</span>
-        <h2 className={styles.cardTitle}>
-          <Link href={ROUTES.detail(category, slug)}>{primaryValue}</Link>
-        </h2>
+        <h2 className={styles.cardTitle}>{primaryValue}</h2>
       </header>
       {primaryMeta ? (
         <dl className={styles.cardMeta}>
@@ -106,13 +107,9 @@ export function CategoryCard(props: {
         </div>
       ) : null}
       <div className={styles.cardFooter}>
-        <LinkButton
-          href={ROUTES.detail(category, slug)}
-          className={styles.cardAction}
-        >
-          View Record
-        </LinkButton>
+        <span className={styles.cardAction}>View Record</span>
       </div>
-    </Card>
+      </Card>
+    </Link>
   );
 }
