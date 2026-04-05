@@ -1,0 +1,881 @@
+.shell {
+    display: grid;
+    gap: 1.5rem;
+    /*grid-template-columns: minmax(16rem, 19rem) minmax(0, 1fr);*/
+}
+
+.sidebar,
+.content {
+    background: var(--surface-container-low);
+    border: 1px solid var(--border);
+    box-shadow: 0 18px 40px var(--shadow);
+    padding: 1.5rem;
+    height: fit-content;
+    position: sticky;
+    top: 10px;
+}
+
+.recent {
+    background: var(--surface-container-high);
+    border-left: 4px solid var(--accent);
+    margin-bottom: 1rem;
+    padding: 0.9rem 1rem;
+}
+
+.recentLabel,
+.metaLabel,
+.term {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.recentValue {
+    display: block;
+    font-family: var(--font-headline), sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-top: 0.3rem;
+}
+
+.categoryList,
+.filters {
+    display: grid;
+    gap: 1rem;
+}
+
+.categoryButton {
+    background: var(--surface-container-low);
+    border: 1px solid var(--border);
+    color: var(--text);
+    cursor: pointer;
+    padding: 0.9rem 1rem;
+    text-align: left;
+}
+
+.categoryButtonActive {
+    background: var(--accent);
+    color: var(--on-accent);
+}
+
+.categoryLabel {
+    display: block;
+    font-family: var(--font-headline), sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+}
+
+.categoryDescription,
+.contentMeta,
+.cardSubtitle {
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.contentHeader {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: minmax(0, 1fr) auto;
+    margin-bottom: 1.5rem;
+}
+
+.kicker {
+    color: var(--text-muted);
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.resultsCount {
+    align-self: end;
+    color: var(--text-muted);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.field {
+    display: grid;
+    gap: 0.45rem;
+    min-width: 0;
+}
+
+.searchField {
+    gap: 0.55rem;
+}
+
+.searchInputWrap {
+    position: relative;
+}
+
+.searchInput {
+    padding-right: 2.75rem;
+}
+
+.sortInputWrap {
+    position: relative;
+}
+
+.sortInput {
+    padding-right: 2.75rem;
+}
+
+.searchProgress {
+    background: var(--accent);
+    height: 2px;
+    inset: auto 0 0;
+    opacity: 0;
+    position: absolute;
+    transform: scaleX(0.12);
+    transform-origin: left;
+    transition: opacity 180ms ease;
+}
+
+.searchProgressActive {
+    animation: search-progress 1s ease-in-out infinite;
+    opacity: 1;
+}
+
+.searchIndicator {
+    border: 2px solid transparent;
+    border-radius: 999px;
+    height: 0.95rem;
+    pointer-events: none;
+    position: absolute;
+    right: 0.95rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0.95rem;
+}
+
+.searchIndicatorActive {
+    animation: search-spin 700ms linear infinite;
+    border-color: var(--accent) transparent var(--accent) transparent;
+}
+
+.sortIndicator {
+    border: 2px solid transparent;
+    border-radius: 999px;
+    height: 0.95rem;
+    pointer-events: none;
+    position: absolute;
+    right: 0.95rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0.95rem;
+    z-index: 1;
+}
+
+.sortIndicatorActive {
+    animation: search-spin 700ms linear infinite;
+    border-color: var(--accent) transparent var(--accent) transparent;
+}
+
+.label {
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+
+.filterBar {
+    align-items: end;
+    border-top: 1px solid var(--surface-strong);
+    border-bottom: 1px solid var(--surface-strong);
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 34rem);
+    margin-bottom: 1.5rem;
+    padding: 1rem 0;
+}
+
+.filterBarMeta {
+    display: grid;
+    gap: 0.3rem;
+}
+
+.toolbarLabel {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.filters {
+    align-items: end;
+    grid-template-columns: minmax(0, 1fr) 11rem auto;
+}
+
+.filterActions {
+    display: flex;
+}
+
+.resetButton {
+    align-self: end;
+    background: var(--surface);
+    border-color: var(--border);
+    color: var(--text-strong);
+    min-width: 8rem;
+}
+
+.resultsSection {
+    display: grid;
+    gap: 0.9rem;
+}
+
+.resultsStatusRow {
+    min-height: 1rem;
+}
+
+.resultsStatus {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+}
+
+.resultsFrame {
+    position: relative;
+}
+
+.transportGrid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+}
+
+.transportCard {
+    background: var(--surface-container-low);
+    border: 1px solid var(--border);
+    box-shadow: 0 18px 40px var(--shadow);
+    color: inherit;
+    display: grid;
+    gap: 0;
+    grid-template-rows: auto 1fr auto;
+    min-height: 26rem;
+    overflow: hidden;
+    text-decoration: none;
+    transition:
+        transform 180ms ease,
+        box-shadow 180ms ease;
+}
+
+.transportCard:hover,
+.transportCard:focus-visible {
+    box-shadow: 0 18px 34px var(--shadow);
+    transform: translateY(-3px);
+}
+
+.transportCardHeader {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    gap: 0.6rem;
+    padding: 1rem;
+}
+
+.transportCardLabel {
+    color: var(--accent);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.transportCardTitle {
+    color: var(--text-strong);
+    font-family: var(--font-headline), sans-serif;
+    font-size: 2rem;
+    line-height: 0.92;
+    margin: 0;
+}
+
+.transportCardSpecs {
+    display: grid;
+    gap: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0;
+    padding: 0 1rem;
+}
+
+.transportCardSpec {
+    display: grid;
+    gap: 0.25rem;
+    min-height: 4.7rem;
+    padding: 0.9rem 0;
+}
+
+.transportCardSpec:nth-child(odd) {
+    padding-right: 0.9rem;
+}
+
+.transportCardSpec:nth-child(even) {
+    border-left: 1px solid var(--border);
+    padding-left: 0.9rem;
+}
+
+.transportCardSpec:nth-child(n + 3) {
+    border-top: 1px solid var(--border);
+}
+
+.transportCardSpec dt {
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.transportCardSpec dd {
+    color: var(--text);
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.transportCardFooter {
+    align-items: center;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    padding: 0.85rem 1rem;
+}
+
+.transportCardAction {
+    color: var(--accent);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.transportCardArrow {
+    align-items: center;
+    background: var(--accent);
+    border-radius: 999px;
+    color: var(--on-accent);
+    display: inline-flex;
+    font-size: 1rem;
+    font-weight: 800;
+    height: 2rem;
+    justify-content: center;
+    width: 2rem;
+}
+
+.resultsContent {
+    transition:
+        opacity 180ms ease,
+        filter 180ms ease;
+}
+
+.resultsContentPending {
+    filter: saturate(0.75);
+    opacity: 0.5;
+}
+
+.resultsOverlay {
+    backdrop-filter: blur(1px);
+    background: linear-gradient(
+        90deg,
+        rgba(244, 240, 232, 0.16),
+        rgba(244, 240, 232, 0.34),
+        rgba(244, 240, 232, 0.16)
+    );
+    inset: 0;
+    pointer-events: none;
+    position: absolute;
+}
+
+.loadingHeader {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: minmax(0, 1fr) auto;
+    margin-bottom: 1.5rem;
+}
+
+.loadingHeaderMain,
+.loadingFilterMeta,
+.loadingCardBody {
+    display: grid;
+}
+
+.loadingHeaderMain {
+    gap: 0.6rem;
+}
+
+.loadingKicker {
+    height: 0.7rem;
+    width: 7rem;
+}
+
+.loadingTitle {
+    height: 2.7rem;
+    width: min(18rem, 70%);
+}
+
+.loadingText {
+    height: 1rem;
+    width: min(24rem, 100%);
+}
+
+.loadingCount {
+    align-self: end;
+    height: 0.9rem;
+    width: 10rem;
+}
+
+.loadingFilterBar {
+    align-items: end;
+    border-top: 1px solid var(--surface-strong);
+    border-bottom: 1px solid var(--surface-strong);
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 34rem);
+    margin-bottom: 1.5rem;
+    padding: 1rem 0;
+}
+
+.loadingFilterMeta {
+    gap: 0.45rem;
+}
+
+.loadingLabel {
+    height: 0.7rem;
+    width: 5rem;
+}
+
+.loadingMetaValue {
+    height: 1.1rem;
+    width: 14rem;
+}
+
+.loadingControls {
+    align-items: end;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: minmax(0, 1fr) 11rem;
+}
+
+.loadingControlLarge,
+.loadingControlSmall {
+    height: 3rem;
+}
+
+.loadingGrid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+
+.loadingTransportGrid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+}
+
+.loadingTransportCard {
+    background: var(--surface-container-low);
+    border: 1px solid var(--border);
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 26rem;
+    overflow: hidden;
+}
+
+.loadingTransportHeader {
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    gap: 0.65rem;
+    padding: 1rem;
+}
+
+.loadingTransportTitle {
+    height: 2rem;
+    width: 70%;
+}
+
+.loadingTransportSpecs {
+    display: grid;
+    gap: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 0 1rem;
+}
+
+.loadingTransportSpec {
+    display: grid;
+    gap: 0.35rem;
+    min-height: 4.7rem;
+    padding: 0.9rem 0;
+}
+
+.loadingTransportSpec:nth-child(odd) {
+    padding-right: 0.9rem;
+}
+
+.loadingTransportSpec:nth-child(even) {
+    border-left: 1px solid var(--border);
+    padding-left: 0.9rem;
+}
+
+.loadingTransportSpec:nth-child(n + 3) {
+    border-top: 1px solid var(--border);
+}
+
+.loadingTransportSpecLabel {
+    height: 0.7rem;
+    width: 5.5rem;
+}
+
+.loadingTransportSpecValue {
+    height: 1rem;
+    width: 70%;
+}
+
+.loadingTransportFooter {
+    align-items: center;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    padding: 0.85rem 1rem;
+}
+
+.loadingTransportAction {
+    height: 0.9rem;
+    width: 6rem;
+}
+
+.loadingTransportArrow {
+    border-radius: 999px;
+    height: 2rem;
+    width: 2rem;
+}
+
+.loadingCard {
+    background: linear-gradient(
+        180deg,
+        var(--surface-container-low) 0%,
+        var(--surface-container-high) 100%
+    );
+    border: 1px solid var(--border);
+    display: grid;
+    min-height: 24rem;
+    overflow: hidden;
+}
+
+.loadingCardVisual {
+    height: 11rem;
+}
+
+.loadingCardBody {
+    gap: 0.85rem;
+    padding: 1.2rem;
+}
+
+.loadingCardEyebrow {
+    height: 0.7rem;
+    width: 5rem;
+}
+
+.loadingCardTitle {
+    height: 1.8rem;
+    width: 75%;
+}
+
+.loadingCardMeta {
+    height: 1rem;
+    width: 55%;
+}
+
+.loadingCardStat {
+    height: 1rem;
+    margin-top: auto;
+    width: 40%;
+}
+
+.loadingCardAction {
+    height: 2.75rem;
+    width: 8.5rem;
+}
+
+.resourceCard,
+.filmCard {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.cardHeader {
+    margin-bottom: 0.8rem;
+}
+
+.cardVisual {
+    background-color: var(--surface-alt);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 11rem;
+    margin: -1.5rem -1.5rem 1rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.cardVisual::before {
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.04) 0%,
+        rgba(32, 26, 21, 0.08) 100%
+    );
+    content: "";
+    inset: 0;
+    position: absolute;
+}
+
+.visualPlanets::before {
+    background: linear-gradient(
+        180deg,
+        rgba(252, 250, 246, 0.04) 0%,
+        rgba(32, 26, 21, 0.16) 100%
+    );
+}
+
+.visualFilms {
+    background-image: url("/art/categories/films.svg");
+}
+
+.visualPeople {
+    background-image: url("/art/categories/people.svg");
+}
+
+.visualPlanets {
+    background-image: url("/art/categories/planets.svg");
+}
+
+.visualSpecies {
+    background-image: url("/art/categories/species.svg");
+}
+
+.visualVehicles {
+    background-image: url("/art/categories/vehicles.svg");
+}
+
+.visualStarships {
+    background-image: url("/art/categories/starships.svg");
+}
+
+.cardEyebrow {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.cardTitle {
+    font-family: var(--font-headline), sans-serif;
+    font-size: 1.5rem;
+    line-height: 1;
+    margin: 0.3rem 0 0;
+}
+
+.cardTitle a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.cardTitle a:hover,
+.cardTitle a:focus-visible {
+    text-decoration: underline;
+}
+
+.cardMeta {
+    margin: 0 0 0.85rem;
+    min-height: 3rem;
+}
+
+.cardMetaRow {
+    display: grid;
+    gap: 0.25rem;
+}
+
+.cardMetaValue {
+    color: var(--text-strong);
+    margin: 0;
+}
+
+.cardStatValue {
+    font-family: var(--font-headline), sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.cardStatLabel {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.cardStatInline {
+    align-items: baseline;
+    border-top: 1px solid var(--surface-strong);
+    display: flex;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding-top: 0.8rem;
+}
+
+.definitionList {
+    display: grid;
+    gap: 0.5rem;
+    margin: 0 0 0.55rem;
+}
+
+.definitionRow {
+    align-items: baseline;
+    display: flex;
+    gap: 0.45rem;
+}
+
+.value {
+    margin: 0;
+    word-break: break-word;
+}
+
+.cardFooter {
+    margin-top: 0.8rem;
+    padding-top: 0.1rem;
+}
+
+.cardAction {
+    color: var(--on-accent);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.cardAction:hover,
+.cardAction:focus-visible {
+    color: var(--on-accent);
+    text-decoration: none;
+}
+
+.pagination {
+    align-items: center;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+}
+
+.pageInfo,
+.pageGhost {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.backLinkRow {
+    margin: 1rem 0 0;
+}
+
+.error,
+.empty {
+    margin-bottom: 1rem;
+    padding: 0.95rem 1rem;
+}
+
+.error {
+    background: var(--alert-surface);
+    border: 1px solid var(--alert-border);
+    color: var(--alert-text);
+}
+
+.empty {
+    background: var(--surface-container-high);
+    border: 1px dashed var(--border);
+}
+
+@media (max-width: 64rem) {
+    .shell {
+        grid-template-columns: 1fr;
+    }
+
+    .content {
+        padding: 1rem;
+    }
+
+    .contentHeader,
+    .filterBar,
+    .filters,
+    .loadingHeader,
+    .loadingFilterBar,
+    .loadingControls {
+        grid-template-columns: 1fr;
+    }
+
+    .definitionRow {
+        align-items: start;
+        flex-direction: column;
+        gap: 0.1rem;
+    }
+}
+
+@media (max-width: 40rem) {
+    .loadingTransportSpecs {
+        grid-template-columns: 1fr;
+    }
+
+    .loadingTransportSpec {
+        border-left: 0;
+        padding: 0.9rem 0;
+    }
+
+    .loadingTransportSpec:nth-child(odd),
+    .loadingTransportSpec:nth-child(even) {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .loadingTransportSpec:nth-child(n + 2) {
+        border-top: 1px solid var(--border);
+    }
+}
+
+@keyframes search-progress {
+    0% {
+        transform: scaleX(0.12);
+    }
+
+    50% {
+        transform: scaleX(0.62);
+    }
+
+    100% {
+        transform: scaleX(1);
+    }
+}
+
+@keyframes search-spin {
+    from {
+        transform: translateY(-50%) rotate(0deg);
+    }
+
+    to {
+        transform: translateY(-50%) rotate(360deg);
+    }
+}
