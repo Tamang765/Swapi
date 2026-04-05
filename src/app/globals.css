@@ -1,29 +1,174 @@
-html {
+:root {
+    --background: #f4f0e8;
+    --surface: #fcfaf6;
+    --surface-soft: #f7f2ea;
+    --surface-contrast: #fffdf9;
+    --surface-alt: #efe6d9;
+    --surface-strong: #e1d4c0;
+    --surface-container-low: #fcfaf6;
+    --surface-container-high: #f4ede2;
+    --surface-container-highest: #e9decd;
+    --text: #201a15;
+    --text-strong: #111111;
+    --text-muted: #4f453b;
+    --text-inverse: #fcfaf6;
+    --text-inverse-muted: rgba(252, 250, 246, 0.74);
+    --on-accent: #fcfaf6;
+    --on-secondary: #fcfaf6;
+    --on-surface: #111111;
+    --on-surface-variant: #4f453b;
+    --border: rgba(32, 26, 21, 0.14);
+    --border-soft: rgba(32, 26, 21, 0.1);
+    --border-muted: rgba(32, 26, 21, 0.18);
+    --border-faint: rgba(32, 26, 21, 0.08);
+    --accent: #8b2e01;
+    --accent-strong: #6f2401;
+    --accent-soft: #b14a18;
+    --accent-surface: #8b2e01;
+    --accent-surface-strong: #6f2401;
+    --accent-surface-alt: #d1784d;
+    --secondary: #5f7691;
+    --secondary-strong: #45596f;
+    --secondary-soft: #89a0bb;
+    --secondary-surface: #dde6ef;
+    --alert-surface: #f4e3dc;
+    --alert-border: #ba6a47;
+    --alert-text: #7c2e12;
+    --accent-highlight: #8b2e01;
+    --accent-highlight-soft: #b14a18;
+    --accent-highlight-strong: #6f2401;
+    --accent-highlight-bright: #d1784d;
+    --accent-highlight-alt: #c25f2f;
+    --accent-highlight-alt-bright: #e39a73;
+    --overlay-strong: rgba(17, 17, 17, 0.78);
+    --shadow-strong: rgba(32, 26, 21, 0.18);
+    --shadow-soft: rgba(32, 26, 21, 0.1);
+    --border-inverse-soft: rgba(252, 250, 246, 0.2);
+    --focus: #8b2e01;
+    --shadow: rgba(32, 26, 21, 0.12);
+}
+
+* {
     box-sizing: border-box;
 }
 
-*,
-*::before,
-*::after {
-    box-sizing: inherit;
+html {
+    min-height: 100%;
 }
 
 body {
+    background: var(--background);
+    color: var(--text);
+    font-family: var(--font-body), sans-serif;
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: #ffffff;
-    color: #111111;
+    min-height: 100vh;
 }
 
-main {
-    min-height: calc(100vh - 8rem);
-    padding: 2rem 0;
+a {
+    color: inherit;
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+.skip-link {
+    background: var(--accent);
+    color: var(--on-accent);
+    left: 1rem;
+    padding: 0.75rem 1rem;
+    position: fixed;
+    text-decoration: none;
+    top: 1rem;
+    transform: translateY(-200%);
+    transition: transform 160ms ease;
+    z-index: 10000;
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+}
+
+:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+}
+
+.sr-only {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
+
+.feedback-container {
+    display: grid;
+    gap: 1rem;
+}
+
+.feedback-error-panel {
+    background: var(--alert-surface);
+    border: 1px solid var(--alert-border);
+    color: var(--alert-text);
+    padding: 0.95rem 1rem;
+}
+
+.feedback-action-row {
+    display: flex;
+    gap: 0.75rem;
 }
 
 .route-progress {
-    background: #111111;
+    background: linear-gradient(
+        90deg,
+        var(--accent),
+        var(--accent-highlight-bright),
+        var(--accent)
+    );
     height: 3px;
     inset: 0 0 auto;
+    opacity: 0;
+    pointer-events: none;
     position: fixed;
+    transform: scaleX(0.08);
+    transform-origin: left;
+    transition: opacity 160ms ease;
     z-index: 9999;
+}
+
+.route-progress-active {
+    animation: route-progress 900ms ease-in-out infinite;
+    opacity: 1;
+}
+
+@keyframes route-progress {
+    0% {
+        transform: scaleX(0.08);
+    }
+
+    50% {
+        transform: scaleX(0.55);
+    }
+
+    100% {
+        transform: scaleX(0.92);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+    }
 }

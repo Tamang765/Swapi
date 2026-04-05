@@ -1,22 +1,79 @@
 "use client";
 
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export function RouteProgress() {
-  const [isVisible, setIsVisible] = useState(false);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [isNavigating, setIsNavigating] = useState(false);
 
   useEffect(() => {
-    const show = () => setIsVisible(true);
-    const hide = () => setIsVisible(false);
+    setIsNavigating(false);
+  }, [pathname, searchParams]);
 
-    window.addEventListener("beforeunload", show);
-    window.addEventListener("load", hide);
+  useEffect(() => {
+    const handleClick = (event: MouseEvent) => {
+      if (event.defaultPrevented || event.button !== 0) {
+        return;
+      }
 
-    return () => {
-      window.removeEventListener("beforeunload", show);
-      window.removeEventListener("load", hide);
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+        return;
+      }
+
+      const target = event.target;
+
+      if (!(target instanceof Element)) {
+        return;
+      }
+
+      const anchor = target.closest("a");
+
+      if (!(anchor instanceof HTMLAnchorElement)) {
+        return;
+      }
+
+      if (anchor.target && anchor.target !== "_self") {
+        return;
+      }
+
+      const href = anchor.getAttribute("href");
+
+      if (!href || href.startsWith("#")) {
+        return;
+      }
+
+      try {
+        const nextUrl = new URL(anchor.href, window.location.href);
+        const currentUrl = new URL(window.location.href);
+
+        if (nextUrl.origin !== currentUrl.origin) {
+          return;
+        }
+
+        if (
+          nextUrl.pathname === currentUrl.pathname &&
+          nextUrl.search === currentUrl.search
+        ) {
+          return;
+        }
+
+        setIsNavigating(true);
+      } catch {
+        setIsNavigating(true);
+      }
     };
+
+    document.addEventListener("click", handleClick, true);
+
+    return () => document.removeEventListener("click", handleClick, true);
   }, []);
 
-  return isVisible ? <div className="route-progress" aria-hidden="true" /> : null;
+  return (
+    <div
+      className={`route-progress ${isNavigating ? "route-progress-active" : ""}`}
+      aria-hidden="true"
+    />
+  );
 }
