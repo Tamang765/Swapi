@@ -189,6 +189,12 @@
     grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
 }
 
+.cardLink {
+    color: inherit;
+    display: block;
+    text-decoration: none;
+}
+
 .filterBar {
     align-items: end;
     border-top: 1px solid var(--surface-strong);
@@ -758,16 +764,24 @@
 }
 
 .cardAction {
+    align-items: center;
+    background: var(--accent);
+    border: 1px solid var(--accent);
     color: var(--on-accent);
+    display: inline-flex;
     font-size: 0.76rem;
     font-weight: 800;
     letter-spacing: 0.1em;
+    min-height: 2.75rem;
+    padding: 0.75rem 1rem;
     text-decoration: none;
     text-transform: uppercase;
 }
 
 .cardAction:hover,
 .cardAction:focus-visible {
+    background: var(--accent-strong);
+    border-color: var(--accent-strong);
     color: var(--on-accent);
     text-decoration: none;
 }

@@ -1,33 +1,31 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export function useQueryParams() {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [isPending, setIsPending] = useState(false);
-
-  useEffect(() => {
-    // Any pathname or query change means the new state landed, so we can stop
-    // showing the local pending UI for the category page controls.
-    setIsPending(false);
-  }, [pathname, searchParams]);
+  const [pendingQuery, setPendingQuery] = useState<string | null>(null);
+  const isPending =
+    pendingQuery !== null && pendingQuery !== searchParams.toString();
 
   const replace = useCallback(
     (nextParams: URLSearchParams) => {
-      if (nextParams.toString() === searchParams.toString()) {
+      const nextQuery = nextParams.toString();
+
+      if (nextQuery === searchParams.toString()) {
         return;
       }
 
-      setIsPending(true);
+      setPendingQuery(nextQuery);
       window.dispatchEvent(
         new CustomEvent("category-search-change", {
-          detail: nextParams.toString(),
+          detail: nextQuery,
         }),
       );
-      router.replace(`${pathname}?${nextParams.toString()}`, {
+      router.replace(`${pathname}?${nextQuery}`, {
         scroll: false,
       });
     },

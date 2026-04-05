@@ -106,9 +106,9 @@
 }
 
 .headerTag {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text-strong);
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    color: var(--on-accent);
     padding: 0.45rem 0.7rem;
 }
 

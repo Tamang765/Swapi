@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SWAPI Explorer
 
-## Getting Started
+This project is a small SWAPI Explorer app built with Next.js and TypeScript.
+I made it to browse SWAPI data by category, search records, sort results, and
+open a detail page for each item.
 
-First, run the development server:
+## What this app does
+
+- browse all main SWAPI categories
+- search inside a category
+- sort by name or title
+- open detail pages
+- view related items
+- keep recent category
+- show loading states while data is being fetched
+
+
+## Main stack
+
+- Next.js
+- TypeScript
+- CSS Modules
+- SWAPI
+
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+## Project structure
 
-To learn more about Next.js, take a look at the following resources:
+- `src/app`  
+  app routes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `src/components`  
+  reusable UI and page parts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `src/modules`  
+  feature logic for category and detail pages
 
-## Deploy on Vercel
+- `src/services`  
+  SWAPI fetch functions
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `src/utils`  
+  small helper functions
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Notes
+
+- used simple comments only where the code needed a quick reason.
+- kept the styling in CSS modules.
+- The app uses SWAPI data and turns relation URLs into normal UI sections.
+
+## Author
+
+Pradeep Tamang  
+https://pradeeptamang.com.np

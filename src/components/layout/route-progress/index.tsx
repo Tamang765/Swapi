@@ -1,16 +1,35 @@
 "use client";
 
-import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 export function RouteProgress() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const [isNavigating, setIsNavigating] = useState(false);
+  const [pendingUrl, setPendingUrl] = useState<string | null>(null);
+  const timeoutRef = useRef<number | null>(null);
+  const isNavigating = pendingUrl !== null && pendingUrl !== pathname;
 
   useEffect(() => {
-    setIsNavigating(false);
-  }, [pathname, searchParams]);
+    return () => {
+      if (timeoutRef.current !== null) {
+        window.clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isNavigating) {
+      return;
+    }
+
+    if (timeoutRef.current !== null) {
+      window.clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = window.setTimeout(() => {
+      setPendingUrl(null);
+    }, 1200);
+  }, [isNavigating]);
 
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
@@ -59,15 +78,23 @@ export function RouteProgress() {
           return;
         }
 
-        setIsNavigating(true);
+        setPendingUrl(nextUrl.pathname);
       } catch {
-        setIsNavigating(true);
+        setPendingUrl(`pending:${Date.now()}`);
       }
     };
 
-    document.addEventListener("click", handleClick, true);
+    const handlePopState = () => {
+      setPendingUrl(null);
+    };
 
-    return () => document.removeEventListener("click", handleClick, true);
+    document.addEventListener("click", handleClick, true);
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      document.removeEventListener("click", handleClick, true);
+      window.removeEventListener("popstate", handlePopState);
+    };
   }, []);
 
   return (

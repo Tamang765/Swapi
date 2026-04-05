@@ -28,7 +28,9 @@ export function Navbar() {
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
   const mobileMenuRef = useRef<HTMLDivElement | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [currentSearch, setCurrentSearch] = useState("");
+  const [currentSearch, setCurrentSearch] = useState(
+    typeof window === "undefined" ? "" : window.location.search,
+  );
 
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? "hidden" : "";
@@ -83,14 +85,6 @@ export function Navbar() {
   }, [isMenuOpen]);
 
   useEffect(() => {
-    setIsMenuOpen(false);
-  }, [pathname]);
-
-  useEffect(() => {
-    const syncSearch = () => {
-      setCurrentSearch(window.location.search);
-    };
-
     const handleCategorySearchChange = (event: Event) => {
       const nextSearch =
         event instanceof CustomEvent && typeof event.detail === "string"
@@ -99,20 +93,18 @@ export function Navbar() {
       setCurrentSearch(nextSearch ? `?${nextSearch}` : "");
     };
 
-    syncSearch();
-    // Category page filters update the URL in place, so the navbar listens for
-    // that change and rebuilds its links with the latest state.
     window.addEventListener(
       "category-search-change",
       handleCategorySearchChange,
     );
+
     return () => {
       window.removeEventListener(
         "category-search-change",
         handleCategorySearchChange,
       );
     };
-  }, [pathname]);
+  }, []);
 
   const categoryHrefs = useMemo(() => {
     const [maybeCategory] = pathname.split("/").filter(Boolean);
@@ -124,23 +116,23 @@ export function Navbar() {
       return baseHrefs;
     }
 
-    const searchParams = new URLSearchParams(currentSearch);
+    const params = new URLSearchParams(currentSearch);
     const routeState = createDefaultCategoryState();
 
     // Preserve the current per-category state when jumping between categories.
     for (const category of categories) {
       routeState[category] = {
         search:
-          searchParams
+          params
             .get(getCategoryStateParamKey(category, "search"))
             ?.trim() ?? "",
         sort:
-          searchParams.get(getCategoryStateParamKey(category, "sort")) ===
+          params.get(getCategoryStateParamKey(category, "sort")) ===
           "desc"
             ? "desc"
             : "asc",
         page: parseNavbarPage(
-          searchParams.get(getCategoryStateParamKey(category, "page")),
+          params.get(getCategoryStateParamKey(category, "page")),
         ),
       };
     }
