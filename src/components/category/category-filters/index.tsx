@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import styles from "@/components/category/category.module.css";
 import {
   CATEGORY_CONFIG,
@@ -9,12 +9,46 @@ import {
 } from "@/constants/categories";
 import type { CategoryState } from "@/modules/category/types";
 import { categoryStateDefaults } from "@/modules/category/constants";
-import { createCategorySearchParams } from "@/modules/category/utils";
+import {
+  createCategorySearchParams,
+  readCategoryStateFromSession,
+  writeCategoryStateToSession,
+} from "@/modules/category/utils";
 import { useCategorySearchInput } from "@/modules/category/hooks";
 import { Button } from "@/components/ui/button";
 import { Dropdown } from "@/components/ui/dropdown";
 import { Input } from "@/components/ui/input";
 import { useQueryParams } from "@/hooks/useQueryParams";
+
+function hasUrlStateForCategory(
+  params: URLSearchParams,
+  activeCategory: Category,
+) {
+  return (
+    params.has("search") ||
+    params.has("sort") ||
+    params.has("page") ||
+    params.has(`${activeCategory}Search`) ||
+    params.has(`${activeCategory}Sort`) ||
+    params.has(`${activeCategory}Page`)
+  );
+}
+
+function isDefaultState(state: CategoryState) {
+  return (
+    state.search === categoryStateDefaults.search &&
+    state.sort === categoryStateDefaults.sort &&
+    state.page === categoryStateDefaults.page
+  );
+}
+
+function isSameState(left: CategoryState, right: CategoryState) {
+  return (
+    left.search === right.search &&
+    left.sort === right.sort &&
+    left.page === right.page
+  );
+}
 
 function SearchField(props: {
   category: Category;
@@ -26,7 +60,8 @@ function SearchField(props: {
     state: Record<Category, CategoryState>,
   ) => void;
 }) {
-  const { category, categoryState, currentState, isPending, onNavigate } = props;
+  const { category, categoryState, currentState, isPending, onNavigate } =
+    props;
   const [value, setValue] = useState(currentState.search);
   const debouncedValue = useCategorySearchInput(value);
   const isDebouncing = value !== debouncedValue;
@@ -150,14 +185,70 @@ export function CategoryFilters(props: {
   const { activeCategory, categoryState, showCategoryList = false } = props;
   const currentState = categoryState[activeCategory];
   const queryParams = useQueryParams();
+  const currentQuery = queryParams.current.toString();
+  const hasUrlState = useMemo(
+    () => hasUrlStateForCategory(queryParams.current, activeCategory),
+    [activeCategory, currentQuery, queryParams.current],
+  );
   const [isResetPending, setIsResetPending] = useState(false);
 
   const navigate = useCallback(
     (nextCategory: Category, nextState: Record<Category, CategoryState>) => {
-      queryParams.replace(createCategorySearchParams(nextCategory, nextState));
+      const storedState = readCategoryStateFromSession();
+      const mergedState = { ...storedState };
+      const targetState = nextState[nextCategory];
+
+      mergedState[activeCategory] = nextState[activeCategory];
+      mergedState[nextCategory] = targetState;
+
+      writeCategoryStateToSession(mergedState);
+      queryParams.replace(
+        createCategorySearchParams(nextCategory, mergedState),
+      );
     },
-    [queryParams],
+    [activeCategory, queryParams],
   );
+
+  useEffect(() => {
+    const storedState = readCategoryStateFromSession();
+    const currentActiveState = categoryState[activeCategory];
+    const storedActiveState = storedState[activeCategory];
+
+    // Do not overwrite saved category state with SSR defaults on bare routes.
+    if (
+      !hasUrlState &&
+      isDefaultState(currentActiveState) &&
+      !isDefaultState(storedActiveState)
+    ) {
+      return;
+    }
+
+    if (isSameState(currentActiveState, storedActiveState)) {
+      return;
+    }
+
+    writeCategoryStateToSession({
+      ...storedState,
+      [activeCategory]: currentActiveState,
+    });
+  }, [activeCategory, categoryState, hasUrlState]);
+
+  useEffect(() => {
+    if (hasUrlState || queryParams.isPending) {
+      return;
+    }
+
+    const storedState = readCategoryStateFromSession();
+    const storedActiveState = storedState[activeCategory];
+
+    if (isDefaultState(storedActiveState)) {
+      return;
+    }
+
+    queryParams.replace(
+      createCategorySearchParams(activeCategory, storedState),
+    );
+  }, [activeCategory, hasUrlState, queryParams]);
 
   const canReset =
     currentState.search !== categoryStateDefaults.search ||

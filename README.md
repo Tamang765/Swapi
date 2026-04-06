@@ -21,8 +21,10 @@ open a detail page for each item.
 
 ## State behavior
 
-- search and sort state is stored in URL query params
-- state is kept per category (for example: planets search does not overwrite people search)
+- active category state uses URL query params (`search`, `sort`, `page`)
+- full per-category state is stored in `sessionStorage` (`swapi-category-state`)
+- when switching categories, previous search/sort/page is restored from `sessionStorage`
+- URL stays clean and does not include other category params
 - recent category is stored in cookie (`recentCategory`)
 
 

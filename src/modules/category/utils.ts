@@ -5,11 +5,7 @@ import { isCategory, isSortDirection } from "@/lib/validators";
 import { categoryStateDefaults } from "@/modules/category/constants";
 import type { CategoryState } from "@/modules/category/types";
 
-const stateFieldSuffixes = {
-  search: "Search",
-  sort: "Sort",
-  page: "Page",
-} satisfies Record<keyof CategoryState, string>;
+const storageKey = "swapi-category-state";
 
 function getSingleValue(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value;
@@ -26,17 +22,26 @@ function parsePage(value: string | undefined) {
 function parseCategoryState(
   searchParams: SearchParamsRecord,
   category: Category,
+  activeCategory: Category,
 ) {
-  // Read one category state from the shared URL params.
-  const searchValue = getSingleValue(
-    searchParams[getCategoryStateParamKey(category, "search")],
-  );
-  const sortValue = getSingleValue(
-    searchParams[getCategoryStateParamKey(category, "sort")],
-  );
-  const pageValue = getSingleValue(
-    searchParams[getCategoryStateParamKey(category, "page")],
-  );
+  if (category !== activeCategory) {
+    return {
+      ...categoryStateDefaults,
+      rawSort: undefined,
+      rawPage: undefined,
+    };
+  }
+
+  // Keep supporting old category-prefixed query params if present.
+  const searchValue =
+    getSingleValue(searchParams.search) ??
+    getSingleValue(searchParams[`${category}Search`]);
+  const sortValue =
+    getSingleValue(searchParams.sort) ??
+    getSingleValue(searchParams[`${category}Sort`]);
+  const pageValue =
+    getSingleValue(searchParams.page) ??
+    getSingleValue(searchParams[`${category}Page`]);
 
   return {
     search: searchValue?.trim() ?? "",
@@ -47,17 +52,66 @@ function parseCategoryState(
   };
 }
 
-export function getCategoryStateParamKey(
-  category: Category,
-  field: keyof CategoryState,
-) {
-  return `${category}${stateFieldSuffixes[field]}`;
-}
-
 export function createDefaultCategoryState(): Record<Category, CategoryState> {
   return Object.fromEntries(
     categories.map((category) => [category, { ...categoryStateDefaults }]),
   ) as Record<Category, CategoryState>;
+}
+
+function isCategoryState(value: unknown): value is CategoryState {
+  if (!value || typeof value !== "object") {
+    return false;
+  }
+
+  const possibleState = value as Partial<CategoryState>;
+
+  return (
+    typeof possibleState.search === "string" &&
+    isSortDirection(possibleState.sort) &&
+    typeof possibleState.page === "number" &&
+    Number.isInteger(possibleState.page) &&
+    possibleState.page > 0
+  );
+}
+
+export function readCategoryStateFromSession(): Record<
+  Category,
+  CategoryState
+> {
+  const defaultState = createDefaultCategoryState();
+
+  if (typeof window === "undefined") {
+    return defaultState;
+  }
+
+  try {
+    const rawValue = window.sessionStorage.getItem(storageKey);
+    if (!rawValue) {
+      return defaultState;
+    }
+
+    const parsedValue = JSON.parse(rawValue) as Record<string, unknown>;
+    for (const category of categories) {
+      const state = parsedValue[category];
+      if (isCategoryState(state)) {
+        defaultState[category] = state;
+      }
+    }
+  } catch {
+    return defaultState;
+  }
+
+  return defaultState;
+}
+
+export function writeCategoryStateToSession(
+  categoryState: Record<Category, CategoryState>,
+) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.sessionStorage.setItem(storageKey, JSON.stringify(categoryState));
 }
 
 export function parseCategoryRouteState(searchParams: SearchParamsRecord) {
@@ -73,9 +127,13 @@ export function parseCategoryRouteState(searchParams: SearchParamsRecord) {
     errors.push("Invalid category request received. Showing planets instead.");
   }
 
-  // Keep one search/sort/page state per category in the URL.
+  // URL carries only active category state; other categories stay in session.
   for (const category of categories) {
-    const nextState = parseCategoryState(searchParams, category);
+    const nextState = parseCategoryState(
+      searchParams,
+      category,
+      activeCategory,
+    );
 
     categoryState[category] = {
       search: nextState.search,
@@ -108,26 +166,19 @@ export function createCategorySearchParams(
   activeCategory: Category,
   categoryState: Record<Category, CategoryState>,
 ) {
-  const params = new URLSearchParams({ category: activeCategory });
+  const params = new URLSearchParams();
+  const state = categoryState[activeCategory];
 
-  // Skip default values to keep the URL short.
-  for (const category of categories) {
-    const state = categoryState[category];
+  if (state.search) {
+    params.set("search", state.search);
+  }
 
-    if (state.search) {
-      params.set(getCategoryStateParamKey(category, "search"), state.search);
-    }
+  if (state.sort !== categoryStateDefaults.sort) {
+    params.set("sort", state.sort);
+  }
 
-    if (state.sort !== categoryStateDefaults.sort) {
-      params.set(getCategoryStateParamKey(category, "sort"), state.sort);
-    }
-
-    if (state.page !== categoryStateDefaults.page) {
-      params.set(
-        getCategoryStateParamKey(category, "page"),
-        String(state.page),
-      );
-    }
+  if (state.page !== categoryStateDefaults.page) {
+    params.set("page", String(state.page));
   }
 
   return params;

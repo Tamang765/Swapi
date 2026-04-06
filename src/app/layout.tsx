@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { Epilogue, Manrope } from "next/font/google";
 import { RouteProgress } from "@/components/layout/route-progress";
 import { ScrollReset } from "@/components/layout/scroll-reset";
+import { ScrollTop } from "@/components/layout/scroll-top";
 import "./globals.css";
 
 const headlineFont = Epilogue({
@@ -54,6 +55,7 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <RouteProgress />
         </Suspense>
+        <ScrollTop />
         {children}
       </body>
     </html>
