@@ -3,7 +3,10 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import styles from "@/components/detail/detail.module.css";
-import type { RelatedEntitySection } from "@/modules/detail/types";
+import type {
+  RelatedEntityCard,
+  RelatedEntitySection,
+} from "@/modules/detail/types";
 import { Button } from "@/components/ui/button";
 
 const INITIAL_VISIBLE_ITEMS = 4;
@@ -20,6 +23,11 @@ export function FilmUniverseClient(props: {
   const [modalSection, setModalSection] = useState<RelatedEntitySection | null>(
     null,
   );
+  const [expandedSections, setExpandedSections] = useState<
+    Record<string, RelatedEntityCard[]>
+  >({});
+  const [loadingSectionId, setLoadingSectionId] = useState("");
+  const [loadingError, setLoadingError] = useState("");
   const activeSection =
     props.sections.find((section) => section.id === activeSectionId) ??
     props.sections[0];
@@ -77,11 +85,84 @@ export function FilmUniverseClient(props: {
     };
   }, [modalSection]);
 
+  useEffect(() => {
+    if (!modalSection || modalSection.remainingUrls.length === 0) {
+      return;
+    }
+
+    const section = modalSection;
+
+    if (expandedSections[section.id]) {
+      return;
+    }
+
+    let isCancelled = false;
+
+    async function loadRemainingItems() {
+      setLoadingError("");
+      setLoadingSectionId(section.id);
+
+      try {
+        const response = await fetch("/api/related-items", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            category: section.category,
+            urls: section.remainingUrls,
+          }),
+        });
+
+        const payload = (await response.json()) as {
+          error?: string;
+          items?: RelatedEntityCard[];
+        };
+
+        if (!response.ok) {
+          throw new Error(payload.error ?? "Failed to load related items.");
+        }
+
+        if (isCancelled) {
+          return;
+        }
+
+        setExpandedSections((current) => ({
+          ...current,
+          [section.id]: [...section.items, ...(payload.items ?? [])],
+        }));
+      } catch (error) {
+        if (isCancelled) {
+          return;
+        }
+
+        setLoadingError(
+          error instanceof Error
+            ? error.message
+            : "Failed to load related items.",
+        );
+      } finally {
+        if (!isCancelled) {
+          setLoadingSectionId("");
+        }
+      }
+    }
+
+    void loadRemainingItems();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [expandedSections, modalSection]);
+
   if (!activeSection) {
     return null;
   }
 
   const visibleItems = activeSection.items.slice(0, INITIAL_VISIBLE_ITEMS);
+  const modalItems = modalSection
+    ? expandedSections[modalSection.id] ?? modalSection.items
+    : [];
 
   return (
     <>
@@ -127,7 +208,7 @@ export function FilmUniverseClient(props: {
               >
                 <span>{section.title}</span>
                 <strong className={styles.universeTabCount}>
-                  {section.items.length}
+                  {section.totalItems}
                 </strong>
               </button>
             );
@@ -144,7 +225,7 @@ export function FilmUniverseClient(props: {
             <p className={styles.universePanelLead}>
               Showing items from {activeSection.title.toLowerCase()}.
             </p>
-            {activeSection.items.length > INITIAL_VISIBLE_ITEMS ? (
+            {activeSection.totalItems > INITIAL_VISIBLE_ITEMS ? (
               <Button
                 type="button"
                 className={styles.universeToggle}
@@ -238,7 +319,7 @@ export function FilmUniverseClient(props: {
             </div>
 
             <div className={styles.universePageGrid}>
-              {modalSection.items.map((item, index) => (
+              {modalItems.map((item, index) => (
                 <Link
                   key={item.id}
                   href={item.href}
@@ -284,6 +365,14 @@ export function FilmUniverseClient(props: {
                 </Link>
               ))}
             </div>
+            {loadingSectionId === modalSection.id ? (
+              <p className={styles.universeModalMessage}>Loading more items...</p>
+            ) : null}
+            {loadingError ? (
+              <p className={styles.universeModalError} role="alert">
+                {loadingError}
+              </p>
+            ) : null}
           </div>
         </div>
       ) : null}

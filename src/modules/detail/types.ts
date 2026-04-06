@@ -20,5 +20,8 @@ export type RelatedEntityCard = {
 export type RelatedEntitySection = {
   id: string;
   title: string;
+  category: string;
   items: RelatedEntityCard[];
+  totalItems: number;
+  remainingUrls: string[];
 };
