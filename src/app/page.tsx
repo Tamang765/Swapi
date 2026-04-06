@@ -53,7 +53,10 @@ function getCategoryCardClass(category: Category) {
 
 export default async function Home() {
   const { records } = await getLandingCategories();
-  const heroLead = records[2] ?? records[0];
+  const heroLead =
+    records.reduce((best, current) =>
+      current.count > best.count ? current : best,
+    ) ?? records[0];
 
   return (
     <PageShell contentClassName={styles.main}>

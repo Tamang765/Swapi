@@ -481,11 +481,11 @@
 }
 
 .heroVehicles .heroArtwork {
-    background-image: url("/art/categories/vehicles.svg");
+    background-image: url("/art/transport/vehicle-card.svg");
 }
 
 .heroStarships .heroArtwork {
-    background-image: url("/art/categories/starships.svg");
+    background-image: url("/art/transport/starship-card.svg");
 }
 
 .heroCraft {

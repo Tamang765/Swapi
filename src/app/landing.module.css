@@ -391,33 +391,39 @@
 }
 
 .categoryCardFilms .categoryCardArtwork,
-.categoryCardFilms .heroArtwork {
+.categoryCardFilms .heroArtwork,
+.categoryCardFilms.heroArtwork {
     background-image: url("/art/categories/films.svg");
 }
 
 .categoryCardPeople .categoryCardArtwork,
-.categoryCardPeople .heroArtwork {
+.categoryCardPeople .heroArtwork,
+.categoryCardPeople.heroArtwork {
     background-image: url("/art/categories/people.svg");
 }
 
 .categoryCardPlanets .categoryCardArtwork,
-.categoryCardPlanets .heroArtwork {
+.categoryCardPlanets .heroArtwork,
+.categoryCardPlanets.heroArtwork {
     background-image: url("/art/categories/planets.svg");
 }
 
 .categoryCardSpecies .categoryCardArtwork,
-.categoryCardSpecies .heroArtwork {
+.categoryCardSpecies .heroArtwork,
+.categoryCardSpecies.heroArtwork {
     background-image: url("/art/categories/species.svg");
 }
 
 .categoryCardVehicles .categoryCardArtwork,
-.categoryCardVehicles .heroArtwork {
-    background-image: url("/art/categories/vehicles.svg");
+.categoryCardVehicles .heroArtwork,
+.categoryCardVehicles.heroArtwork {
+    background-image: url("/art/transport/vehicle-card.svg");
 }
 
 .categoryCardStarships .categoryCardArtwork,
-.categoryCardStarships .heroArtwork {
-    background-image: url("/art/categories/starships.svg");
+.categoryCardStarships .heroArtwork,
+.categoryCardStarships.heroArtwork {
+    background-image: url("/art/transport/starship-card.svg");
 }
 
 .banner {

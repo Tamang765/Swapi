@@ -28,6 +28,18 @@ export default async function ArchivePage() {
   const cookieStore = await cookies();
   const recentCategory = cookieStore.get("recentCategory")?.value;
 
+  const getCategoryVisual = (category: (typeof categories)[number]) => {
+    if (category === "vehicles") {
+      return "/art/transport/vehicle-card.svg";
+    }
+
+    if (category === "starships") {
+      return "/art/transport/starship-card.svg";
+    }
+
+    return `/art/categories/${category}.svg`;
+  };
+
   return (
     <PageShell contentClassName={styles.main}>
             <section className={styles.intro}>
@@ -49,6 +61,13 @@ export default async function ArchivePage() {
             <section className={styles.grid} aria-label="Archive categories">
               {categories.map((category, index) => (
                 <article key={category} className={styles.card}>
+                  <div
+                    className={styles.cardVisual}
+                    style={{
+                      backgroundImage: `url(${getCategoryVisual(category)})`,
+                    }}
+                    aria-hidden="true"
+                  />
                   <div className={styles.cardTop}>
                     <span className={styles.cardIndex}>
                       {(index + 1).toString().padStart(2, "0")} / category
@@ -65,8 +84,7 @@ export default async function ArchivePage() {
                     className={styles.cardAction}
                     href={ROUTES.category(category)}
                   >
-                    View
-                    <span>+</span>
+                    View record
                   </LinkButton>
                 </article>
               ))}
