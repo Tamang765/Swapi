@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 
 import { PageShell } from "@/components/layout/page-shell";
 import { RecentCategory } from "@/components/recent-category";
@@ -10,8 +11,14 @@ import {
 } from "@/constants/categories";
 import { ROUTES } from "@/constants/routes";
 import { fetchSwapiCategoryByPage } from "@/services/swapi.service";
+import { createPageMetadata } from "@/utils/seo";
 import { formatResourceValue, getPrimaryValue } from "@/utils/formatters";
 import styles from "@/app/landing.module.css";
+
+export const metadata: Metadata = createPageMetadata(
+  "Home",
+  "Browse all SWAPI categories, open full lists, and view item details in one app.",
+);
 
 async function getLandingCategories() {
   const records = await Promise.all(

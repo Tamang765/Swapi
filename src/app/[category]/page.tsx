@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
@@ -11,8 +12,27 @@ import { getCategoryListing } from "@/modules/category/api";
 import { parseCategoryRouteState } from "@/modules/category/utils";
 import type { SearchParamsRecord } from "@/types/common.types";
 import { isCategory } from "@/lib/validators";
+import { createPageMetadata } from "@/utils/seo";
 
 type SearchParams = Promise<SearchParamsRecord>;
+
+export async function generateMetadata(props: {
+  params: Promise<{ category: string }>;
+}): Promise<Metadata> {
+  const { category } = await props.params;
+
+  if (!isCategory(category)) {
+    return createPageMetadata(
+      "Category",
+      "Browse SWAPI category data in a searchable and sortable list.",
+    );
+  }
+
+  return createPageMetadata(
+    CATEGORY_CONFIG[category].label,
+    CATEGORY_CONFIG[category].description,
+  );
+}
 
 export default async function CategoryPage(props: {
   params: Promise<{ category: string }>;

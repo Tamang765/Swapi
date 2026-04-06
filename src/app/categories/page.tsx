@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { cookies } from "next/headers";
 
 import { PageShell } from "@/components/layout/page-shell";
@@ -6,7 +7,13 @@ import { LinkButton } from "@/components/ui/button";
 import { CATEGORY_CONFIG, categories } from "@/constants/categories";
 import { isCategory } from "@/lib/validators";
 import { ROUTES } from "@/constants/routes";
+import { createPageMetadata } from "@/utils/seo";
 import styles from "@/app/archive.module.css";
+
+export const metadata: Metadata = createPageMetadata(
+  "Categories",
+  "Open a SWAPI category to search, sort, and view all available items.",
+);
 
 const categorySummaries: Record<(typeof categories)[number], string> = {
   films: "Film list with titles, episode numbers, release dates, and credits.",
