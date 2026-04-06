@@ -82,10 +82,21 @@ export default async function CategoryPage(props: {
       ) : null}
 
       {result.items.length === 0 ? (
-        <p className={styles.empty} role="status">
-          No {CATEGORY_CONFIG[category].label.toLowerCase()} matched your
-          current search.
-        </p>
+        <div className={styles.empty} role="status">
+          <div
+            className={`${styles.emptyVisual} ${styles[`visual${category[0].toUpperCase()}${category.slice(1)}`] ?? ""}`}
+            aria-hidden="true"
+          />
+          <div className={styles.emptyBody}>
+            <strong className={styles.emptyTitle}>
+              No {CATEGORY_CONFIG[category].label.toLowerCase()} found
+            </strong>
+            <p className={styles.emptyText}>
+              No {CATEGORY_CONFIG[category].label.toLowerCase()} matched your
+              current search.
+            </p>
+          </div>
+        </div>
       ) : (
         <CategoryResults category={category} items={result.items} />
       )}

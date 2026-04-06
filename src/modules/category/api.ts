@@ -10,14 +10,6 @@ import { normalizeSearchTerm } from "@/modules/search/utils";
 import { createPagination } from "@/utils/pagination";
 import { getPrimaryValue } from "@/utils/formatters";
 
-async function delayForLoadingState() {
-  if (process.env.NODE_ENV !== "development") {
-    return;
-  }
-
-  await new Promise((resolve) => setTimeout(resolve, 900));
-}
-
 export async function getCategoryListing(options: {
   category: Category;
   page?: number;
@@ -48,7 +40,6 @@ export async function getCategoryListing(options: {
     sort === "asc" &&
     pageSize === DEFAULT_PAGE_SIZE
   ) {
-    await delayForLoadingState();
     const payload = await fetchSwapiCategoryByPage(category, query);
 
     return {
@@ -59,7 +50,6 @@ export async function getCategoryListing(options: {
     };
   }
 
-  await delayForLoadingState();
   const firstPage = await fetchSwapiCategoryByPage(category, query);
   const aggregatedItems = [...firstPage.results];
   let nextUrl = firstPage.next ?? "";

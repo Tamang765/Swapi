@@ -624,7 +624,6 @@
 
 .heroCraftMark {
     background: var(--accent);
-    bottom: 0.85rem;
     color: var(--text-inverse);
     font-size: 0.66rem;
     font-weight: 800;
@@ -632,7 +631,7 @@
     letter-spacing: 0.14em;
     padding: 0.38rem 0.5rem;
     position: absolute;
-    right: 0.85rem;
+    right: 0;
     text-transform: uppercase;
 }
 
@@ -782,6 +781,10 @@
     align-content: start;
     gap: 0.55rem;
     padding-top: 0.2rem;
+}
+
+.loadingPanelHeader::before {
+    display: none;
 }
 
 .panelHeader::before {
@@ -1491,15 +1494,29 @@
         max-width: 100%;
     }
 
+    .craftHeader .metaBar {
+        gap: 0;
+    }
+
+    .craftHeader .metaItem {
+        min-height: auto;
+        padding: 0.85rem 0;
+    }
+
+    .infoPanel {
+        gap: 0.6rem;
+        padding: 0.85rem 0 0.75rem;
+    }
+
+    .panelHeader {
+        gap: 0.3rem;
+        padding-top: 0;
+    }
+
     .heroCallout,
     .heroSpotlightItem {
         padding-left: 0.9rem;
         padding-right: 0.9rem;
-    }
-
-    .infoPanel {
-        gap: 0.85rem;
-        padding: 1rem 0 0.85rem;
     }
 
     .panelTitle {

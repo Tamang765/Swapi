@@ -209,6 +209,7 @@
 .filterBarMeta {
     display: grid;
     gap: 0.3rem;
+    min-width: 0;
 }
 
 .toolbarLabel {
@@ -226,6 +227,7 @@
 
 .filterActions {
     display: flex;
+    min-width: 0;
 }
 
 .resetButton {
@@ -820,8 +822,37 @@
 }
 
 .empty {
+    align-items: center;
     background: var(--surface-container-high);
     border: 1px dashed var(--border);
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: minmax(9rem, 12rem) minmax(0, 1fr);
+}
+
+.emptyVisual {
+    background-color: var(--surface-alt);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border: 1px solid var(--border);
+    min-height: 8.5rem;
+}
+
+.emptyBody {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.emptyTitle {
+    color: var(--text-strong);
+    font-family: var(--font-headline), sans-serif;
+    font-size: 1.2rem;
+}
+
+.emptyText {
+    color: var(--text-muted);
+    margin: 0;
 }
 
 @media (max-width: 64rem) {
@@ -830,6 +861,7 @@
     }
 
     .content {
+        min-width: 0;
         padding: 1rem;
     }
 
@@ -847,9 +879,82 @@
         flex-direction: column;
         gap: 0.1rem;
     }
+
+    .empty {
+        grid-template-columns: 1fr;
+    }
+
+    .emptyVisual {
+        min-height: 7rem;
+    }
 }
 
 @media (max-width: 40rem) {
+    .grid,
+    .loadingGrid,
+    .transportGrid,
+    .loadingTransportGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .cardLink,
+    .transportCard {
+        min-width: 0;
+    }
+
+    .transportCardHeader,
+    .transportCardFooter,
+    .transportCardSpecs {
+        min-width: 0;
+    }
+
+    .transportCardTitle {
+        font-size: 1.6rem;
+    }
+
+    .transportCardSpecs {
+        grid-template-columns: 1fr;
+    }
+
+    .transportCardSpec {
+        border-left: 0;
+        min-height: auto;
+        padding: 0.9rem 0;
+    }
+
+    .transportCardSpec:nth-child(odd),
+    .transportCardSpec:nth-child(even) {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .transportCardSpec:nth-child(n + 2) {
+        border-top: 1px solid var(--border);
+    }
+
+    .recent,
+    .contentHeader,
+    .filterBar,
+    .filterBarMeta,
+    .resultsSection,
+    .backLinkRow {
+        min-width: 0;
+    }
+
+    .resultsCount {
+        justify-self: start;
+    }
+
+    .filters,
+    .filterActions {
+        min-width: 0;
+    }
+
+    .resetButton {
+        min-width: 0;
+        width: 100%;
+    }
+
     .loadingTransportSpecs {
         grid-template-columns: 1fr;
     }

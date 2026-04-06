@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 
-import { Container } from "@/components/layout/container";
-import { Footer } from "@/components/layout/footer";
-import { Navbar } from "@/components/layout/navbar";
+import { PageShell } from "@/components/layout/page-shell";
 import { LinkButton } from "@/components/ui/button";
 import { CATEGORY_CONFIG, categories } from "@/constants/categories";
 import { isCategory } from "@/lib/validators";
@@ -24,11 +22,7 @@ export default async function ArchivePage() {
   const recentCategory = cookieStore.get("recentCategory")?.value;
 
   return (
-    <>
-      <Navbar />
-      <main id="main-content">
-        <Container>
-          <div className={styles.main}>
+    <PageShell contentClassName={styles.main}>
             <section className={styles.intro}>
               <span className={styles.eyebrow}>Categories</span>
               <h1 className={styles.title}>Category list</h1>
@@ -70,10 +64,6 @@ export default async function ArchivePage() {
                 </article>
               ))}
             </section>
-          </div>
-        </Container>
-      </main>
-      <Footer />
-    </>
+    </PageShell>
   );
 }

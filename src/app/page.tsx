@@ -1,8 +1,6 @@
 import Link from "next/link";
 
-import { Footer } from "@/components/layout/footer";
-import { Container } from "@/components/layout/container";
-import { Navbar } from "@/components/layout/navbar";
+import { PageShell } from "@/components/layout/page-shell";
 import { RecentCategory } from "@/components/recent-category";
 import { LinkButton } from "@/components/ui/button";
 import {
@@ -51,11 +49,7 @@ export default async function Home() {
   const heroLead = records[2] ?? records[0];
 
   return (
-    <>
-      <Navbar />
-      <main id="main-content">
-        <Container>
-          <div className={styles.main}>
+    <PageShell contentClassName={styles.main}>
             <section className={styles.hero}>
               <div className={styles.heroCopy}>
                 <span className={styles.eyebrow}>Live data app</span>
@@ -205,10 +199,6 @@ export default async function Home() {
                 </div>
               </div>
             </section>
-          </div>
-        </Container>
-      </main>
-      <Footer />
-    </>
+    </PageShell>
   );
 }

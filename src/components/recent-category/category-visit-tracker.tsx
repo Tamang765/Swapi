@@ -8,6 +8,7 @@ export function CategoryVisitTracker(props: { category: string }) {
     document.cookie = `${RECENT_CATEGORY_COOKIE}=${encodeURIComponent(
       props.category,
     )}; path=/; max-age=${60 * 60 * 24 * 30}; samesite=lax`;
+    window.dispatchEvent(new Event("recent-category-change"));
   }, [props.category]);
 
   return null;

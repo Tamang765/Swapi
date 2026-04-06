@@ -123,12 +123,10 @@ export function Navbar() {
     for (const category of categories) {
       routeState[category] = {
         search:
-          params
-            .get(getCategoryStateParamKey(category, "search"))
-            ?.trim() ?? "",
+          params.get(getCategoryStateParamKey(category, "search"))?.trim() ??
+          "",
         sort:
-          params.get(getCategoryStateParamKey(category, "sort")) ===
-          "desc"
+          params.get(getCategoryStateParamKey(category, "sort")) === "desc"
             ? "desc"
             : "asc",
         page: parseNavbarPage(
@@ -176,7 +174,7 @@ export function Navbar() {
         <div className={styles.navActions}>
           <LinkButton
             href={ROUTES.categories}
-            className={`${styles.navCta} ${
+            className={`${styles.navCta} ${styles.navCtaDesktop} ${
               isCategoriesPage ? styles.navCtaActive : ""
             }`}
             aria-current={isCategoriesPage ? "page" : undefined}
@@ -218,7 +216,7 @@ export function Navbar() {
             className={styles.mobileMenuPrimary}
             onClick={closeMenu}
           >
-            Open categories page
+            View All Categories
           </Link>
           <nav className={styles.mobileNav} aria-label="Mobile">
             {categories.map((category) => (
