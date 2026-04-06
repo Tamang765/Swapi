@@ -201,7 +201,7 @@
     border-bottom: 1px solid var(--surface-strong);
     display: grid;
     gap: 1rem;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 34rem);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 40rem);
     margin-bottom: 1.5rem;
     padding: 1rem 0;
 }
@@ -222,7 +222,7 @@
 
 .filters {
     align-items: end;
-    grid-template-columns: minmax(0, 1fr) 11rem auto;
+    grid-template-columns: minmax(15rem, 1.45fr) 11rem auto;
 }
 
 .filterActions {
