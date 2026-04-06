@@ -33,6 +33,14 @@ export function CategoryTransportTable(props: {
             href={ROUTES.detail(props.category, slug)}
             className={styles.transportCard}
           >
+            <div
+              className={`${styles.transportCardVisual} ${
+                props.category === "vehicles"
+                  ? styles.transportVisualVehicles
+                  : styles.transportVisualStarships
+              }`}
+              aria-hidden="true"
+            />
             <div className={styles.transportCardHeader}>
               <span className={styles.transportCardLabel}>{categoryLabel}</span>
               <h3 className={styles.transportCardTitle}>
@@ -50,10 +58,7 @@ export function CategoryTransportTable(props: {
             </dl>
 
             <div className={styles.transportCardFooter}>
-              <span className={styles.transportCardAction}>View item</span>
-              <span className={styles.transportCardArrow} aria-hidden="true">
-                +
-              </span>
+              <span className={styles.cardAction}>View record</span>
             </div>
           </Link>
         );

@@ -150,6 +150,7 @@ export function CategoryFilters(props: {
   const { activeCategory, categoryState, showCategoryList = false } = props;
   const currentState = categoryState[activeCategory];
   const queryParams = useQueryParams();
+  const [isResetPending, setIsResetPending] = useState(false);
 
   const navigate = useCallback(
     (nextCategory: Category, nextState: Record<Category, CategoryState>) => {
@@ -216,6 +217,7 @@ export function CategoryFilters(props: {
             className={styles.resetButton}
             disabled={!canReset || queryParams.isPending}
             onClick={() => {
+              setIsResetPending(true);
               navigate(activeCategory, {
                 ...categoryState,
                 [activeCategory]: {
@@ -227,7 +229,9 @@ export function CategoryFilters(props: {
               });
             }}
           >
-            {queryParams.isPending ? "Resetting..." : "Reset all"}
+            {isResetPending && queryParams.isPending
+              ? "Resetting..."
+              : "Reset all"}
           </Button>
         </div>
       </div>

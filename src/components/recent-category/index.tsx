@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useSyncExternalStore } from "react";
 import { CATEGORY_CONFIG } from "@/constants/categories";
 import { ROUTES } from "@/constants/routes";
 import { RECENT_CATEGORY_COOKIE } from "@/lib/config";
@@ -21,6 +21,10 @@ type RecentCategoryProps = {
 };
 
 function readCookie(name: string) {
+  if (typeof document === "undefined") {
+    return "";
+  }
+
   const match = document.cookie.match(
     new RegExp(
       `(?:^|; )${name.replace(/[$()*+.?[\\\]^{|}]/g, "\\$&")}=([^;]*)`,
@@ -30,11 +34,22 @@ function readCookie(name: string) {
   return match ? decodeURIComponent(match[1]) : "";
 }
 
+function subscribe(onStoreChange: () => void) {
+  window.addEventListener("recent-category-change", onStoreChange);
+  window.addEventListener("popstate", onStoreChange);
+
+  return () => {
+    window.removeEventListener("recent-category-change", onStoreChange);
+    window.removeEventListener("popstate", onStoreChange);
+  };
+}
+
 export function RecentCategory(props: RecentCategoryProps) {
-  const pathname = usePathname();
-  void pathname;
-  const recentCategory =
-    typeof document === "undefined" ? "" : readCookie(RECENT_CATEGORY_COOKIE);
+  const recentCategory = useSyncExternalStore(
+    subscribe,
+    () => readCookie(RECENT_CATEGORY_COOKIE),
+    () => "",
+  );
 
   return (
     <div className={props.className}>

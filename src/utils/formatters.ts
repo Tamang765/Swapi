@@ -1,12 +1,18 @@
 import { CATEGORY_CONFIG, type Category } from "@/constants/categories";
 import type { ResourceRecord } from "@/types/api.types";
 
+function toDisplayCase(value: string) {
+  return value.replace(/\b([a-z])([a-z']*)\b/g, (_, first, rest) => {
+    return `${first.toUpperCase()}${rest}`;
+  });
+}
+
 export function getPrimaryValue(resource: ResourceRecord, category: Category): string {
   const sortField = CATEGORY_CONFIG[category].sortField;
   const value = resource[sortField];
 
   return typeof value === "string" && value.trim().length > 0
-    ? value
+    ? toDisplayCase(value.trim())
     : "Untitled";
 }
 
@@ -16,8 +22,10 @@ export function formatResourceValue(value: unknown): string {
   }
 
   if (Array.isArray(value)) {
-    return value.length === 0 ? "None" : value.map(String).join(", ");
+    return value.length === 0
+      ? "None"
+      : value.map((item) => toDisplayCase(String(item).trim())).join(", ");
   }
 
-  return String(value).trim() || "Unknown";
+  return toDisplayCase(String(value).trim()) || "Unknown";
 }

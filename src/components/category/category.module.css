@@ -209,6 +209,7 @@
 .filterBarMeta {
     display: grid;
     gap: 0.3rem;
+    min-width: 0;
 }
 
 .toolbarLabel {
@@ -226,6 +227,7 @@
 
 .filterActions {
     display: flex;
+    min-width: 0;
 }
 
 .resetButton {
@@ -261,19 +263,55 @@
 }
 
 .transportCard {
-    background: var(--surface-container-low);
+    background: linear-gradient(
+        180deg,
+        var(--surface-container-low) 0%,
+        var(--surface-container-high) 100%
+    );
     border: 1px solid var(--border);
     box-shadow: 0 18px 40px var(--shadow);
     color: inherit;
     display: grid;
-    gap: 0;
+    gap: 0.8rem;
     grid-template-rows: auto 1fr auto;
     min-height: 26rem;
     overflow: hidden;
+    padding: 1.2rem;
     text-decoration: none;
     transition:
         transform 180ms ease,
         box-shadow 180ms ease;
+}
+
+.transportCardVisual {
+    background-color: var(--surface-alt);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border: 1px solid var(--border);
+    height: 11rem;
+    margin: -1.2rem -1.2rem 0.2rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.transportCardVisual::before {
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.02),
+        rgba(32, 26, 21, 0.1)
+    );
+    content: "";
+    inset: 0;
+    position: absolute;
+}
+
+.transportVisualVehicles {
+    background-image: url("/art/transport/vehicle-card.svg");
+}
+
+.transportVisualStarships {
+    background-image: url("/art/transport/starship-card.svg");
 }
 
 .transportCard:hover,
@@ -283,11 +321,10 @@
 }
 
 .transportCardHeader {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
+    background: transparent;
     display: grid;
-    gap: 0.6rem;
-    padding: 1rem;
+    gap: 0.45rem;
+    padding: 0;
 }
 
 .transportCardLabel {
@@ -307,11 +344,13 @@
 }
 
 .transportCardSpecs {
+    background: transparent;
+    border-top: 1px solid var(--surface-strong);
     display: grid;
     gap: 0;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     margin: 0;
-    padding: 0 1rem;
+    padding: 0.8rem 0 0;
 }
 
 .transportCardSpec {
@@ -351,31 +390,10 @@
 
 .transportCardFooter {
     align-items: center;
-    border-top: 1px solid var(--border);
+    background: transparent;
     display: flex;
-    justify-content: space-between;
-    padding: 0.85rem 1rem;
-}
-
-.transportCardAction {
-    color: var(--accent);
-    font-size: 0.78rem;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-}
-
-.transportCardArrow {
-    align-items: center;
-    background: var(--accent);
-    border-radius: 999px;
-    color: var(--on-accent);
-    display: inline-flex;
-    font-size: 1rem;
-    font-weight: 800;
-    height: 2rem;
-    justify-content: center;
-    width: 2rem;
+    margin-top: 0.3rem;
+    padding: 0;
 }
 
 .resultsContent {
@@ -820,8 +838,37 @@
 }
 
 .empty {
+    align-items: center;
     background: var(--surface-container-high);
     border: 1px dashed var(--border);
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: minmax(9rem, 12rem) minmax(0, 1fr);
+}
+
+.emptyVisual {
+    background-color: var(--surface-alt);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border: 1px solid var(--border);
+    min-height: 8.5rem;
+}
+
+.emptyBody {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.emptyTitle {
+    color: var(--text-strong);
+    font-family: var(--font-headline), sans-serif;
+    font-size: 1.2rem;
+}
+
+.emptyText {
+    color: var(--text-muted);
+    margin: 0;
 }
 
 @media (max-width: 64rem) {
@@ -830,6 +877,7 @@
     }
 
     .content {
+        min-width: 0;
         padding: 1rem;
     }
 
@@ -847,9 +895,82 @@
         flex-direction: column;
         gap: 0.1rem;
     }
+
+    .empty {
+        grid-template-columns: 1fr;
+    }
+
+    .emptyVisual {
+        min-height: 7rem;
+    }
 }
 
 @media (max-width: 40rem) {
+    .grid,
+    .loadingGrid,
+    .transportGrid,
+    .loadingTransportGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .cardLink,
+    .transportCard {
+        min-width: 0;
+    }
+
+    .transportCardHeader,
+    .transportCardFooter,
+    .transportCardSpecs {
+        min-width: 0;
+    }
+
+    .transportCardTitle {
+        font-size: 1.6rem;
+    }
+
+    .transportCardSpecs {
+        grid-template-columns: 1fr;
+    }
+
+    .transportCardSpec {
+        border-left: 0;
+        min-height: auto;
+        padding: 0.9rem 0;
+    }
+
+    .transportCardSpec:nth-child(odd),
+    .transportCardSpec:nth-child(even) {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .transportCardSpec:nth-child(n + 2) {
+        border-top: 1px solid var(--border);
+    }
+
+    .recent,
+    .contentHeader,
+    .filterBar,
+    .filterBarMeta,
+    .resultsSection,
+    .backLinkRow {
+        min-width: 0;
+    }
+
+    .resultsCount {
+        justify-self: start;
+    }
+
+    .filters,
+    .filterActions {
+        min-width: 0;
+    }
+
+    .resetButton {
+        min-width: 0;
+        width: 100%;
+    }
+
     .loadingTransportSpecs {
         grid-template-columns: 1fr;
     }

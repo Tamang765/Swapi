@@ -33,8 +33,8 @@ export function DetailLoading() {
       </section>
 
       <section className={styles.infoPanel}>
-        <div className={styles.panelHeader}>
-          <h2 className={styles.panelTitle}>Details</h2>
+        <div className={`${styles.panelHeader} ${styles.loadingPanelHeader}`}>
+          <Skeleton className={styles.loadingDetailSectionTitle} />
         </div>
         <div className={styles.loadingDetailSpecs}>
           {Array.from({ length: 4 }, (_, index) => (

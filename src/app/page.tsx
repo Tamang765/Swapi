@@ -1,8 +1,7 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 
-import { Footer } from "@/components/layout/footer";
-import { Container } from "@/components/layout/container";
-import { Navbar } from "@/components/layout/navbar";
+import { PageShell } from "@/components/layout/page-shell";
 import { RecentCategory } from "@/components/recent-category";
 import { LinkButton } from "@/components/ui/button";
 import {
@@ -12,8 +11,14 @@ import {
 } from "@/constants/categories";
 import { ROUTES } from "@/constants/routes";
 import { fetchSwapiCategoryByPage } from "@/services/swapi.service";
+import { createPageMetadata } from "@/utils/seo";
 import { formatResourceValue, getPrimaryValue } from "@/utils/formatters";
 import styles from "@/app/landing.module.css";
+
+export const metadata: Metadata = createPageMetadata(
+  "Home",
+  "Browse all SWAPI categories, open full lists, and view item details in one app.",
+);
 
 async function getLandingCategories() {
   const records = await Promise.all(
@@ -48,14 +53,13 @@ function getCategoryCardClass(category: Category) {
 
 export default async function Home() {
   const { records } = await getLandingCategories();
-  const heroLead = records[2] ?? records[0];
+  const heroLead =
+    records.reduce((best, current) =>
+      current.count > best.count ? current : best,
+    ) ?? records[0];
 
   return (
-    <>
-      <Navbar />
-      <main id="main-content">
-        <Container>
-          <div className={styles.main}>
+    <PageShell contentClassName={styles.main}>
             <section className={styles.hero}>
               <div className={styles.heroCopy}>
                 <span className={styles.eyebrow}>Live data app</span>
@@ -205,10 +209,6 @@ export default async function Home() {
                 </div>
               </div>
             </section>
-          </div>
-        </Container>
-      </main>
-      <Footer />
-    </>
+    </PageShell>
   );
 }

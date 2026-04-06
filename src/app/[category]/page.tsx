@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
@@ -11,8 +12,27 @@ import { getCategoryListing } from "@/modules/category/api";
 import { parseCategoryRouteState } from "@/modules/category/utils";
 import type { SearchParamsRecord } from "@/types/common.types";
 import { isCategory } from "@/lib/validators";
+import { createPageMetadata } from "@/utils/seo";
 
 type SearchParams = Promise<SearchParamsRecord>;
+
+export async function generateMetadata(props: {
+  params: Promise<{ category: string }>;
+}): Promise<Metadata> {
+  const { category } = await props.params;
+
+  if (!isCategory(category)) {
+    return createPageMetadata(
+      "Category",
+      "Browse SWAPI category data in a searchable and sortable list.",
+    );
+  }
+
+  return createPageMetadata(
+    CATEGORY_CONFIG[category].label,
+    CATEGORY_CONFIG[category].description,
+  );
+}
 
 export default async function CategoryPage(props: {
   params: Promise<{ category: string }>;
@@ -82,10 +102,21 @@ export default async function CategoryPage(props: {
       ) : null}
 
       {result.items.length === 0 ? (
-        <p className={styles.empty} role="status">
-          No {CATEGORY_CONFIG[category].label.toLowerCase()} matched your
-          current search.
-        </p>
+        <div className={styles.empty} role="status">
+          <div
+            className={`${styles.emptyVisual} ${styles[`visual${category[0].toUpperCase()}${category.slice(1)}`] ?? ""}`}
+            aria-hidden="true"
+          />
+          <div className={styles.emptyBody}>
+            <strong className={styles.emptyTitle}>
+              No {CATEGORY_CONFIG[category].label.toLowerCase()} found
+            </strong>
+            <p className={styles.emptyText}>
+              No {CATEGORY_CONFIG[category].label.toLowerCase()} matched your
+              current search.
+            </p>
+          </div>
+        </div>
       ) : (
         <CategoryResults category={category} items={result.items} />
       )}

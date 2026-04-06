@@ -157,6 +157,10 @@
     text-transform: uppercase;
 }
 
+.navCtaDesktop {
+    display: inline-flex;
+}
+
 .navCtaActive {
     background: var(--accent-strong);
     border-color: var(--accent-strong);
@@ -278,6 +282,10 @@
         margin-left: auto;
     }
 
+    .navActions .navCtaDesktop {
+        display: none !important;
+    }
+
     .menuButtonLabel {
         display: inline;
     }
@@ -299,11 +307,6 @@
     .mobileNav {
         grid-template-columns: 1fr;
     }
-
-    .navCta {
-        display: none;
-    }
-
     .menuButton {
         padding-inline: 0.8rem;
     }

@@ -18,9 +18,25 @@ const bodyFont = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "UKTV SWAPI Explorer",
+  metadataBase: new URL("https://uktv-swapi-explorer.vercel.app"),
+  title: {
+    default: "UKTV SWAPI Explorer",
+    template: "%s",
+  },
   description:
     "A searchable, sortable category browser built with Next.js, TypeScript, and CSS modules.",
+  openGraph: {
+    title: "UKTV SWAPI Explorer",
+    description:
+      "A searchable, sortable category browser built with Next.js, TypeScript, and CSS modules.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "UKTV SWAPI Explorer",
+    description:
+      "A searchable, sortable category browser built with Next.js, TypeScript, and CSS modules.",
+  },
 };
 
 export default function RootLayout({
