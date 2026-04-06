@@ -11,6 +11,7 @@ open a detail page for each item.
 - sort by name or title
 - open detail pages
 - view related items
+- load extra related items only when needed
 - keep recent category
 - show loading states while data is being fetched
 
@@ -18,6 +19,8 @@ open a detail page for each item.
 
 - uses SSR for category and detail routes
 - uses App Router (`src/app`)
+- detail related items use a small lazy API route for modal expansion
+- that API was added to keep the detail UI fast by loading only a preview first, then loading the rest when needed
 
 ## State behavior
 
@@ -26,7 +29,6 @@ open a detail page for each item.
 - when switching categories, previous search/sort/page is restored from `sessionStorage`
 - URL stays clean and does not include other category params
 - recent category is stored in cookie (`recentCategory`)
-
 
 ## Main stack
 
@@ -80,11 +82,16 @@ npm run start
 - `src/app/api/resources/[category]`  
   API route used by the app
 
+- `src/app/api/related-items`  
+  API route used to load more related detail items on demand and keep the detail UI lighter on first load
+
 ## Notes
 
 - used simple comments only where the code needed a quick reason.
 - kept the styling in CSS modules.
 - The app uses SWAPI data and turns relation URLs into normal UI sections.
+- detail pages load a small preview first and fetch the rest only when the user opens `See All`.
+- used this API-based lazy loading approach to avoid fetching every related record on first render.
 
 ## Accessibility
 
