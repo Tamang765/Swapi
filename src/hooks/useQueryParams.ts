@@ -20,12 +20,7 @@ export function useQueryParams() {
       }
 
       setPendingQuery(nextQuery);
-      window.dispatchEvent(
-        new CustomEvent("category-search-change", {
-          detail: nextQuery,
-        }),
-      );
-      router.replace(`${pathname}?${nextQuery}`, {
+      router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, {
         scroll: false,
       });
     },

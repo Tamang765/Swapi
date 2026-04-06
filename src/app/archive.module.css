@@ -1,7 +1,16 @@
 .main {
     display: grid;
     gap: 2.5rem;
-    padding-block: 2rem 4rem;
+    padding-block: 0rem 4rem;
+}
+
+.archiveShell {
+    background: var(--surface-container-low);
+    border: 1px solid var(--border);
+    box-shadow: 0 18px 40px var(--shadow);
+    display: grid;
+    gap: 2rem;
+    padding: 1.5rem;
 }
 
 .intro {
@@ -234,5 +243,9 @@
 @media (max-width: 64rem) {
     .grid {
         grid-template-columns: 1fr;
+    }
+
+    .archiveShell {
+        padding: 1rem;
     }
 }

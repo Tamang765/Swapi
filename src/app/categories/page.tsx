@@ -42,6 +42,7 @@ export default async function ArchivePage() {
 
   return (
     <PageShell contentClassName={styles.main}>
+      <section className={styles.archiveShell}>
             <section className={styles.intro}>
               <span className={styles.eyebrow}>Categories</span>
               <h1 className={styles.title}>Category list</h1>
@@ -89,6 +90,7 @@ export default async function ArchivePage() {
                 </article>
               ))}
             </section>
+      </section>
     </PageShell>
   );
 }

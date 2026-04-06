@@ -304,7 +304,7 @@
 
 .loadingDetailSectionTitle {
     height: 2rem;
-    width: 12rem;
+    width: min(12rem, 100%);
 }
 
 .loadingDetailTextLine {
@@ -959,7 +959,8 @@
     border: 0;
     color: var(--accent);
     cursor: pointer;
-    padding: 0;
+    padding-inline: 0.75rem;
+    padding-block: 0.2rem;
 }
 
 .universeGrid {
@@ -987,6 +988,10 @@
     transition:
         transform 180ms ease,
         box-shadow 180ms ease;
+}
+
+.universePageCard {
+    border-left: 1px solid var(--border);
 }
 
 .universeCard:hover,
@@ -1406,6 +1411,15 @@
     .loadingDetailHeroFooter,
     .loadingDetailCards {
         grid-template-columns: 1fr;
+    }
+
+    .loadingDetailTabs {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .loadingDetailTab {
+        width: 100%;
     }
 
     .loadingDetailMetaItem {

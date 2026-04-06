@@ -9,28 +9,18 @@ import { ROUTES } from "@/constants/routes";
 import { Container } from "@/components/layout/container";
 import { LinkButton } from "@/components/ui/button";
 import {
-  createDefaultCategoryState,
   createCategorySearchParams,
-  getCategoryStateParamKey,
+  readCategoryStateFromSession,
 } from "@/modules/category/utils";
 import { isCategory } from "@/lib/validators";
 
 const navCategories = ["planets", "starships", "people", "vehicles"] as const;
-
-function parseNavbarPage(value: string | null) {
-  const parsedValue = Number(value);
-
-  return Number.isInteger(parsedValue) && parsedValue > 0 ? parsedValue : 1;
-}
 
 export function Navbar() {
   const pathname = usePathname();
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
   const mobileMenuRef = useRef<HTMLDivElement | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [currentSearch, setCurrentSearch] = useState(
-    typeof window === "undefined" ? "" : window.location.search,
-  );
 
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? "hidden" : "";
@@ -84,28 +74,6 @@ export function Navbar() {
     };
   }, [isMenuOpen]);
 
-  useEffect(() => {
-    const handleCategorySearchChange = (event: Event) => {
-      const nextSearch =
-        event instanceof CustomEvent && typeof event.detail === "string"
-          ? event.detail
-          : "";
-      setCurrentSearch(nextSearch ? `?${nextSearch}` : "");
-    };
-
-    window.addEventListener(
-      "category-search-change",
-      handleCategorySearchChange,
-    );
-
-    return () => {
-      window.removeEventListener(
-        "category-search-change",
-        handleCategorySearchChange,
-      );
-    };
-  }, []);
-
   const categoryHrefs = useMemo(() => {
     const [maybeCategory] = pathname.split("/").filter(Boolean);
     const baseHrefs = Object.fromEntries(
@@ -116,35 +84,19 @@ export function Navbar() {
       return baseHrefs;
     }
 
-    const params = new URLSearchParams(currentSearch);
-    const routeState = createDefaultCategoryState();
-
-    // Preserve the current per-category state when jumping between categories.
-    for (const category of categories) {
-      routeState[category] = {
-        search:
-          params.get(getCategoryStateParamKey(category, "search"))?.trim() ??
-          "",
-        sort:
-          params.get(getCategoryStateParamKey(category, "sort")) === "desc"
-            ? "desc"
-            : "asc",
-        page: parseNavbarPage(
-          params.get(getCategoryStateParamKey(category, "page")),
-        ),
-      };
-    }
+    const routeState = readCategoryStateFromSession();
 
     return Object.fromEntries(
-      categories.map((category) => [
-        category,
-        `${ROUTES.category(category)}?${createCategorySearchParams(
-          category,
-          routeState,
-        ).toString()}`,
-      ]),
+      categories.map((category) => {
+        const query = createCategorySearchParams(category, routeState).toString();
+        const href = query
+          ? `${ROUTES.category(category)}?${query}`
+          : ROUTES.category(category);
+
+        return [category, href];
+      }),
     ) as Record<(typeof categories)[number], string>;
-  }, [currentSearch, pathname]);
+  }, [pathname]);
 
   const closeMenu = () => setIsMenuOpen(false);
   const [activeCategory] = pathname.split("/").filter(Boolean);
